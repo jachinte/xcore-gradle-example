@@ -8,6 +8,12 @@ repositories {
   jcenter()
 }
 
+configurations {
+  all {
+    exclude group: "asm"
+  }
+}
+
 dependencies {
   compileOnly gradleApi()
   testImplementation gradleTestKit()
