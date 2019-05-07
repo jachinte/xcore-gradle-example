@@ -21,7 +21,7 @@ import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
 
 /**
- * Exports the .ecore and .genmodel files for a Xcore model.
+ * Exports the .ecore and .genmodel files for an Xcore model.
  * @author Miguel Jimenez (miguel@uvic.ca)
  * @version $Id$
  * @since 0.1.0
