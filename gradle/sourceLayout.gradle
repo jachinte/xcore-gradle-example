@@ -1,0 +1,33 @@
+sourceSets {
+  main {
+    java.srcDirs = [
+      "src/main/java",
+    ]
+    resources.srcDirs = [
+      "src/main/resources",
+      "model"
+    ]
+  }
+  test {
+    java.srcDirs = [
+      "src/test/java",
+    ]
+    resources.srcDirs = [
+      "src/test/resources",
+    ]
+  }
+}
+
+jar {
+  from("model") {
+    into("model")
+  }
+  from(sourceSets.main.allSource) {
+    include "**/*.xcore"
+    include "**/*.ecore"
+    include "**/*.genmodel"
+  }
+  manifest {
+    attributes "Bundle-SymbolicName": project.name
+  }
+}

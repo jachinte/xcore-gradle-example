@@ -1,0 +1,26 @@
+plugins {
+  id "java"
+}
+
+apply from: "../gradle/loadProperties.gradle"
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  compileOnly gradleApi()
+  testImplementation gradleTestKit()
+
+  // Support for generating the .ecore and .genmodel files
+  implementation "org.eclipse.emf:org.eclipse.emf.ecore.xcore:${ecoreXcoreVersion}"
+  implementation "org.eclipse.emf:org.eclipse.emf.codegen:${emfCodegenVersion}"
+  implementation "org.eclipse.emf:org.eclipse.emf.codegen.ecore:${emfCodegenEcoreVersion}"
+  implementation "org.eclipse.emf:org.eclipse.emf.codegen.ecore.xtext:${ecoreXtextVersion}"
+  implementation "org.eclipse.xtext:org.eclipse.xtext.ecore:${xtextVersion}"
+  implementation "org.eclipse.emf:org.eclipse.emf.mwe2.runtime:${mwe2Version}"
+  implementation "org.eclipse.xtext:org.eclipse.xtext.xbase:${xtextVersion}"
+  implementation "org.eclipse.emf:org.eclipse.emf.ecore.xcore.lib:${ecoreXcoreLibVersion}"
+  implementation "org.eclipse.emf:org.eclipse.emf.ecore:${emfVersion}"
+  implementation "org.eclipse.emf:org.eclipse.emf.common:${emfCommonVersion}"
+}

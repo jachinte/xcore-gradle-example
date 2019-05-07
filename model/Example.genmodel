@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="model/build/xcore/main" editDirectory="" editorDirectory=""
+    modelName="Example" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    testsDirectory="" bundleManifest="false" containmentProxies="true" complianceLevel="8.0"
+    copyrightFields="false" operationReflection="true" importOrganizing="true">
+  <modelPluginVariables>org.eclipse.xtext.xbase.lib</modelPluginVariables>
+  <modelPluginVariables>org.eclipse.emf.ecore.xcore.lib</modelPluginVariables>
+  <genPackages prefix="Example" basePackage="com.example" disposableProviderFactory="true"
+      ecorePackage="Example.ecore#/">
+    <genClasses ecoreClass="Example.ecore#//Model">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Example.ecore#//Model/greetings"/>
+    </genClasses>
+    <genClasses ecoreClass="Example.ecore#//Greeting">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Example.ecore#//Greeting/name"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
