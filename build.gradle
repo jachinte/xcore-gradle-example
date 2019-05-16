@@ -7,6 +7,10 @@ plugins {
 
 apply from: "${rootDir}/gradle/sourceLayout.gradle"
 
+def xcoreInput = "model/Example.xcore"
+def ecoreOutput = "model-gen/Example.ecore"
+def genmodelOutput = "model-gen/Example.genmodel"
+
 repositories {
   jcenter()
 }
@@ -59,9 +63,27 @@ xtext {
   }
 }
 
-task exportXcore(type: ExportXcoreTask) {
-  xcoreInputFile = file("model/Example.xcore")
-  ecoreOutputFile = file("model/Example.ecore")
-  genmodelOutputFile = file("model/Example.genmodel")
+task xcoreExport(type: ExportXcoreTask) {
+  xcoreInputFile = file(xcoreInput)
+  ecoreOutputFile = file(ecoreOutput)
+  genmodelOutputFile = file(genmodelOutput)
 }
-build.dependsOn exportXcore
+
+task xcoreProcess {
+  description = "Replaces platform URIs with Ecore's nsURI"
+  doLast {
+    ant.replace(
+      file: ecoreOutput,
+      token: "platform:/resource/org.eclipse.emf.ecore/model/Ecore.ecore",
+      value: "http://www.eclipse.org/emf/2002/Ecore"
+    )
+    ant.replace(
+      file: genmodelOutput,
+      token: "platform:/resource/org.eclipse.emf.ecore/model/Ecore.genmodel",
+      value: "http://www.eclipse.org/emf/2002/GenModel"
+    )
+  }
+  dependsOn xcoreExport
+}
+
+build.dependsOn xcoreProcess

@@ -1,5 +1,6 @@
 package com.example.tasks;
 
+import com.google.inject.Injector;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -8,12 +9,14 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.xcore.XPackage;
-import org.eclipse.emf.ecore.xcore.XcorePackage;
 import org.eclipse.emf.ecore.xcore.XcoreStandaloneSetup;
+import org.eclipse.emf.mwe.utils.StandaloneSetup;
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.InputFile;
@@ -21,7 +24,7 @@ import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
 
 /**
- * Exports the .ecore and .genmodel files for an Xcore model.
+ * Exports the .ecore and .genmodel files for a Xcore model.
  * @author Miguel Jimenez (miguel@uvic.ca)
  * @version $Id$
  * @since 0.1.0
@@ -55,30 +58,34 @@ public class ExportXcoreTask extends DefaultTask {
 
     /**
      * Generates the .ecore and .genmodel files for the specified Xcore model.
-     * This method is heavily inspired by <a href="https://git.io/fjcU8">
-     * github.com/merks/Xcore/.../ConvertToEcoreActionDelegate.java#L102</a>
      * @throws IOException If saving the file fails
      */
     @TaskAction
-    public void generate() throws IOException {
-        XcoreStandaloneSetup.doSetup();
-        final XtextResourceSet set = new XtextResourceSet();
+    public final void generate() throws IOException {
+        new StandaloneSetup().setPlatformUri("./");
+        final Injector injector = new XcoreStandaloneSetup()
+            .createInjectorAndDoEMFRegistration();
+        final XtextResourceSet set =
+            injector.getInstance(XtextResourceSet.class);
+        set.addLoadOption(
+            XtextResource.OPTION_RESOLVE_ALL,
+            Boolean.TRUE
+        );
         final URI uri =
             URI.createFileURI(this.xcoreInputFile.getAbsolutePath());
-        final XPackage xpackage = (XPackage) EcoreUtil.getObjectByType(
-            set.getResource(
-                uri,
-                true
-            ).getContents(),
-            XcorePackage.Literals.XPACKAGE
-        );
-        final Resource input = xpackage.eResource();
-        this.save(
+        final ResourceSet rset = new ResourceSetImpl();
+        rset.getURIConverter()
+            .getURIMap()
+            .putAll(EcorePlugin.computePlatformURIMap(true));
+        final Resource input = rset.getResource(uri, true);
+        input.load(Collections.EMPTY_MAP);
+        EcoreUtil.resolveAll(input);
+        ExportXcoreTask.save(
             input,
             this.ecoreOutputFile,
             EcorePackage.Literals.EPACKAGE
         );
-        this.save(
+        ExportXcoreTask.save(
             input,
             this.genmodelOutputFile,
             GenModelPackage.Literals.GEN_MODEL
@@ -92,7 +99,7 @@ public class ExportXcoreTask extends DefaultTask {
      * @param literal The literal type (e.g., EcorePackage.Literals.EPACKAGE)
      * @throws IOException If saving the file fails
      */
-    private void save(final Resource input, final File file,
+    private static void save(final Resource input, final File file,
         final EClass literal) throws IOException {
         final URI uri = URI.createFileURI(file.getAbsolutePath());
         final ResourceSet set = input.getResourceSet();
@@ -110,7 +117,7 @@ public class ExportXcoreTask extends DefaultTask {
      * @return A file
      */
     @InputFile
-    public File getXcoreInputFile() {
+    public final File getXcoreInputFile() {
         return this.xcoreInputFile;
     }
 
@@ -119,7 +126,7 @@ public class ExportXcoreTask extends DefaultTask {
      * @return A file
      */
     @OutputFile
-    public File getEcoreOutputFile() {
+    public final File getEcoreOutputFile() {
         return this.ecoreOutputFile;
     }
 
@@ -128,7 +135,7 @@ public class ExportXcoreTask extends DefaultTask {
      * @return A file
      */
     @OutputFile
-    public File getGenmodelOutputFile() {
+    public final File getGenmodelOutputFile() {
         return this.genmodelOutputFile;
     }
 

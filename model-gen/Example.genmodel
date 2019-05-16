@@ -3,7 +3,8 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="model/build/xcore/main" editDirectory="" editorDirectory=""
     modelName="Example" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     testsDirectory="" bundleManifest="false" containmentProxies="true" complianceLevel="8.0"
-    copyrightFields="false" operationReflection="true" importOrganizing="true">
+    copyrightFields="false" usedGenPackages="http://www.eclipse.org/emf/2002/GenModel#//ecore"
+    operationReflection="true" importOrganizing="true">
   <modelPluginVariables>org.eclipse.xtext.xbase.lib</modelPluginVariables>
   <modelPluginVariables>org.eclipse.emf.ecore.xcore.lib</modelPluginVariables>
   <genPackages prefix="Example" basePackage="com.example" disposableProviderFactory="true"
